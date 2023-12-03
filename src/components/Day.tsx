@@ -1,19 +1,24 @@
-import React, {FC, DragEvent, useState, ChangeEvent} from 'react';
+import React, {FC, DragEvent, useState, ChangeEvent, memo} from 'react';
 import styled from "styled-components";
 import Todo from "./Todo";
+import {DayType, Label, TodoBlockType, TodoType} from "../types/type";
+import {Holidays} from "../api/api";
 
 
-const StyledDayContainer = styled.td`
-  height: 150px;
-  width: 150px;
+const StyledDayContainer = styled.div<{ border: boolean, opacity: number }>`
+  max-height: 150px;
+  min-height: 100px;
+  padding: 5px;
   vertical-align: baseline;
   background-color: rgba(238, 229, 226, 0.41);
-  //cursor: move;
+  opacity: ${props => props.opacity};
+  border: 1px solid ${props => props.border === true ? "aquamarine" : "transparent"};
 `
 const StyledInput = styled.input`
   position: absolute;
   z-index: 200;
-
+  width: 95%;
+  top: 30px;
 `
 const Backdrop = styled.div`
   position: fixed;
@@ -21,71 +26,94 @@ const Backdrop = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.5); /* Adjust the alpha value for transparency */
   z-index: 100; /* Ensure it appears above other elements */
   display: flex;
   justify-content: center;
   align-items: center;
 `;
+const StyledTodoBox = styled.div`
 
-type DayType = {
-    id: string,
-    date: string,
-    todo: (never | string)[],
-    label: (never | string)[],
-    active: boolean
+`
+
+
+interface DayProps {
+    day: DayType,
+    todo: TodoBlockType | undefined,
+    holidays: (Holidays | never)[]
+    handleTodoTransfer: (dateAdd: string, indexAdd: number | null, dateRemove: string, indexRemove: number, todo: TodoType) => void
+    handleCreateEdit: (todoText: string, date: string, label: (never | Label)[], index: number | null) => void,
+    labelArray: (never | Label)[]
 }
 
-const Day: FC<{ day: DayType }> = ({day}) => {
-    const {date} = day
-    const [todo, setTodo] = useState<Array<any>>([])
+
+const Day: FC<DayProps> = ({day, todo, holidays, labelArray, handleTodoTransfer, handleCreateEdit}) => {
+    const {date, active} = day
     const [edit, setEdit] = useState<boolean>(false)
     const [newTodo, setNewTodo] = useState<string>('')
+    const [dragOver, setDragOver] = useState<boolean>(false)
     const handleOnDrop = (e: DragEvent) => {
-        e.preventDefault()
-        const droppedItem = JSON.parse(e.dataTransfer.getData('application/json'));
-        setTodo(state => [...state, droppedItem?.task])
+        const {todoDrop, indexRemove, dateRemove} = JSON.parse(e.dataTransfer.getData('application/json'));
+        const updateTodo = {...todoDrop}
+        setDragOver(false)
+        handleTodoTransfer(date, todo?.todoList.length || null, dateRemove, indexRemove, updateTodo)
     }
-
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault()
         e.stopPropagation()
         setNewTodo(e.target.value)
-
     }
-
-    const handlerBackdropClick = (e: any) => {
+    const handlerBackdropClick = (e: React.MouseEvent) => {
         e.preventDefault()
         e.stopPropagation()
-        setTodo(state => [...state, newTodo])
+        if (newTodo) {
+            handleCreateEdit(newTodo, date, [], null)
+        }
         setNewTodo('')
         setEdit(false)
+    }
+    const handlerDragOver = (bool: boolean) => (e: DragEvent) => {
+        e.preventDefault();
+        setDragOver(bool)
     }
 
     const clickEditHandler = () => setEdit(true)
 
-    return (
-
-        <StyledDayContainer
+    return active ? (<StyledDayContainer
+            opacity={1}
             onDrop={handleOnDrop}
-            onDragOver={(e: DragEvent) => {
-                e.preventDefault();
-            }}
+            border={dragOver}
+            onDragOver={handlerDragOver(true)}
+            onDragLeave={handlerDragOver(false)}
             onClick={clickEditHandler}
         >
             <p>{new Date(date).getDate()}</p>
             <div style={{position: "relative"}}>
-                {todo.map((item, index) => (
-                    <Todo editHandler={clickEditHandler} todo={item} key={`${index} ${day}`}/>))
-                }
-                {edit && <StyledInput
-                    value={newTodo}
-                    onChange={onChangeHandler}
-                    placeholder='todo'/>}
+                {holidays.map(item => <p>{item.name}</p>)}
+                <StyledTodoBox>
+                    {todo?.todoList.map((item, index) => (
+                        <Todo
+                            handleTodoTransfer={handleTodoTransfer}
+                            handleCreateEdit={handleCreateEdit}
+                            labelArray={labelArray}
+                            todo={item}
+                            date={date}
+                            position={index}
+                            key={`${item.text} ${item.label}`}/>))
+                    }
+                    {edit && <StyledInput
+                        autoFocus
+                        value={newTodo}
+                        onChange={onChangeHandler}
+                        placeholder='todo'/>}
+                </StyledTodoBox>
+
             </div>
             {edit && <Backdrop onClick={handlerBackdropClick}/>}
-        </StyledDayContainer>
-    );
+        </StyledDayContainer>) :
+        (<StyledDayContainer border={false} opacity={0.5}>
+                <p>{new Date(date).getDate()}</p>
+            </StyledDayContainer>
+        );
 };
 
-export {Day, Backdrop};
+export default memo(Day)
