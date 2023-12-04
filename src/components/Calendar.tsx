@@ -275,7 +275,6 @@ const Calendar: FC<CalendarProps> = ({downloadAsImage}) => {
     };
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0] || null;
-        console.log('file', file)
         uploadTasksFromJson(file);
     };
 
@@ -285,7 +284,6 @@ const Calendar: FC<CalendarProps> = ({downloadAsImage}) => {
             reader.onload = (event) => {
                 const jsonContent = event.target?.result as string;
                 const parsedTasks: TodoBlockType[] = JSON.parse(jsonContent);
-                console.log('parsedTasks', parsedTasks)
 
                 const updatedCalendar: TodoBlockType[] = [...todoArray, ...parsedTasks];
 

@@ -12,7 +12,7 @@ const LabelCreateContainer = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   top: calc(50% - 125px);
-  left: calc(50% - 150px);
+  left: calc(50% - 125px);
   padding: 20px 10px;
   background-color: rgba(179, 211, 211, 0.76);
   border-radius: 50px 50px 50px 50px;
@@ -23,6 +23,7 @@ const StyledCreateBtn = styled.button`
   border: 0;
   cursor: pointer;
   border-radius: 30px;
+  background-color: white;
 
   &:active {
     transform: scale(0.90); /* Scale the button down when it is active (clicked) */

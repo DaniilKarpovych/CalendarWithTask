@@ -157,7 +157,6 @@ const Todo: FC<TodoProps> = ({todo, labelArray, date, position, handleCreateEdit
             return [...state, label]
         })
     }
-    console.log('showLabels', showLabels)
     return (
 
         <StyledTodoContainer

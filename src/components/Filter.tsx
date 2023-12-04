@@ -6,7 +6,7 @@ const StyledFilterContainer = styled.div`
   position: absolute;
   z-index: 300;
   top: calc(50% - 150px);
-  left: calc(50% - 150px);
+  left: calc(50% - 110px);
   max-width: 300px;
   max-height: 300px;
   min-width: 150px;
@@ -36,6 +36,7 @@ const StyledSubmit = styled.button`
   border: 0;
   cursor: pointer;
   border-radius: 30px;
+  background-color: white;
 
   &:active {
     transform: scale(0.90); /* Scale the button down when it is active (clicked) */
