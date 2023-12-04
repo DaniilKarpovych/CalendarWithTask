@@ -58,10 +58,8 @@ const TodoText = styled.p`
   cursor: move;
 `
 const StyledLabelContainer = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 200;
+  background-color: white;
+
 `
 
 const StyledSelectButton = styled.button`
@@ -78,6 +76,7 @@ const StyledSelectButton = styled.button`
 `
 const StyledLabelBox = styled.span`
   z-index: 500;
+  color: white;
   font-size: 10px;
   margin-right: 2px;
   background-color: ${props => props.color};
@@ -171,9 +170,7 @@ const Todo: FC<TodoProps> = ({todo, labelArray, date, position, handleCreateEdit
             onDragOver={handlerDragOver(true)}
             onDragLeave={handlerDragOver(false)}
             onClick={backdropSwitcher}>
-            <StyledLabelContainer>
-                {label?.map((item: Label) => <StyledLabelBox color={item.color}>{item.label}</StyledLabelBox>)}
-            </StyledLabelContainer>
+
             <StyledInputContainer>
                 {todoEdit ?
                     <div>
@@ -184,7 +181,13 @@ const Todo: FC<TodoProps> = ({todo, labelArray, date, position, handleCreateEdit
                                 <StyledSelectButton onClick={handleShowLabels}>select labels</StyledSelectButton>}
                         </StyledAddLabelBox>
                     </div> :
-                    <TodoText>{todoText}</TodoText>}
+                    <StyledLabelContainer>
+                        <div>
+                            {label?.map((item: Label) => <StyledLabelBox
+                                color={item.color}>{item.label}</StyledLabelBox>)}
+                        </div>
+                        <TodoText>{todoText}</TodoText>
+                    </StyledLabelContainer>}
             </StyledInputContainer>
             {todoEdit && <Backdrop onClick={backdropSwitcher}/>}
         </StyledTodoContainer>

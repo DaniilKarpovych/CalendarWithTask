@@ -31,8 +31,11 @@ const Backdrop = styled.div`
   justify-content: center;
   align-items: center;
 `;
-const StyledTodoBox = styled.div`
 
+const StyledDateNumber = styled.p`
+  padding: 0;
+  margin: 5px;
+  font-size: 18px;
 `
 
 
@@ -86,10 +89,10 @@ const Day: FC<DayProps> = ({day, todo, holidays, labelArray, handleTodoTransfer,
             onDragLeave={handlerDragOver(false)}
             onClick={clickEditHandler}
         >
-            <p>{new Date(date).getDate()}</p>
+            <StyledDateNumber>{new Date(date).getDate()}</StyledDateNumber>
             <div style={{position: "relative"}}>
                 {holidays.map(item => <p>{item.name}</p>)}
-                <StyledTodoBox>
+                <div>
                     {todo?.todoList.map((item, index) => (
                         <Todo
                             handleTodoTransfer={handleTodoTransfer}
@@ -105,7 +108,7 @@ const Day: FC<DayProps> = ({day, todo, holidays, labelArray, handleTodoTransfer,
                         value={newTodo}
                         onChange={onChangeHandler}
                         placeholder='todo'/>}
-                </StyledTodoBox>
+                </div>
 
             </div>
             {edit && <Backdrop onClick={handlerBackdropClick}/>}

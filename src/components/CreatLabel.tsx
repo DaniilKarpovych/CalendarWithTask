@@ -18,6 +18,16 @@ const LabelCreateContainer = styled.div`
   border-radius: 50px 50px 50px 50px;
   z-index: 200;
 `
+const StyledCreateBtn = styled.button`
+  margin-top: 10px;
+  border: 0;
+  cursor: pointer;
+  border-radius: 30px;
+
+  &:active {
+    transform: scale(0.90); /* Scale the button down when it is active (clicked) */
+  }
+`
 const StyledInput = styled.input`
   margin-top: 10px;
   border: 0;
@@ -26,6 +36,9 @@ const StyledInput = styled.input`
 `
 const LabelBox = styled.div`
   color: white;
+  border-radius: 30px;
+  margin-top: 5px;
+  padding: 0 5px;
   background-color: ${props => props.color};
 `
 const LabelContainer = styled.div`
@@ -80,10 +93,10 @@ const CreatLabel: React.FC<ColorPickerProps> = ({labelCreateEdit, labelArray}) =
                 <button onClick={handleLabelEdit(false)}>Edit</button>
                 <button onClick={handleLabelEdit(true)}>Remove</button>
                 <button onClick={handleEdit({color: '#f44336', label: '', id: ''})}>Cancel</button>
-            </div> : <button onClick={handleLabelCreate}>Create Label</button>}
+            </div> : <StyledCreateBtn onClick={handleLabelCreate}>Create Label</StyledCreateBtn>}
             <LabelContainer>
                 {labelArray?.map((item: Label) => <LabelBox onClick={handleEdit(item)} color={item.color}>
-                    <p>{item.label}</p>
+                    <span>{item.label}</span>
                 </LabelBox>)}
             </LabelContainer>
         </LabelCreateContainer>

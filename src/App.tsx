@@ -20,6 +20,15 @@ const GlobalStyle = createGlobalStyle`
     background-color: #f1f1f1;
   }
 
+  input {
+    border-color: transparent; /* Set the border color to transparent or the desired color */
+  }
+
+  input:focus {
+    outline: none; /* Remove the default outline */
+    border-color: transparent; /* Set the border color to transparent or the desired color */
+  }
+
   body {
     padding: 0;
     margin: -20px 0 0 0;

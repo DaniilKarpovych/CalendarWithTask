@@ -20,6 +20,8 @@ const StyledFilterContainer = styled.div`
 `
 const StyledLabel = styled.div<{ select: boolean }>`
   background-color: ${props => props.color};
+  border-radius: 30px;
+  padding: 0 5px;
   color: white;
   border: ${props => props.select ? "2px solid black" : "2px solid transparent"};
 `
