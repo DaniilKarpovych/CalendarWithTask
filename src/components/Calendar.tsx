@@ -94,6 +94,15 @@ const Calendar: FC<CalendarProps> = ({downloadAsImage}) => {
     const [filter, setFilter] = useState<{ text: string, labels: string[] }>({text: '', labels: []})
     const [countryHolidays, setCountryHolidays] = useState<(Holidays | never)[]>([])
 
+    const dateCorrection = useCallback((date: number) => {
+        if (date < 10) {
+            return '0' + date
+        } else {
+            return date
+        }
+    }, [])
+
+
     const daysInMonth = useMemo(() => (date: Date): number => {
         const year = date.getFullYear();
         const month = date.getMonth() + 1;
@@ -117,10 +126,9 @@ const Calendar: FC<CalendarProps> = ({downloadAsImage}) => {
             date.setDate(date.getDate() - i);
             const isActive = Math.trunc(new Date().setHours(0, 0, 0) / 1000) <= Math.trunc(+date / 1000)
 
-            const dateCorrection = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
 
             const day = {
-                date: `${date.getFullYear()}-${date.getMonth() + 1}-${dateCorrection}`,
+                date: `${date.getFullYear()}-${dateCorrection(date.getMonth() + 1)}-${dateCorrection(date.getDate())}`,
                 todo: [],
                 active: isActive,
             };
@@ -131,10 +139,9 @@ const Calendar: FC<CalendarProps> = ({downloadAsImage}) => {
             const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), i);
 
             const isActive = Math.trunc(new Date().setHours(0, 0, 0) / 1000) <= Math.trunc(+date / 1000)
-            const dateCorrection = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
 
             const day = {
-                date: `${date.getFullYear()}-${date.getMonth() + 1}-${dateCorrection}`,
+                date: `${date.getFullYear()}-${dateCorrection(date.getMonth() + 1)}-${dateCorrection(date.getDate())}`,
                 todo: [],
                 active: isActive,
             };
@@ -145,13 +152,14 @@ const Calendar: FC<CalendarProps> = ({downloadAsImage}) => {
         for (let i = 1; i <= 6 - lastDay; i++) {
             const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, i);
             const isActive = Math.trunc(new Date().setHours(0, 0, 0) / 1000) <= Math.trunc(+date / 1000)
-            const dateCorrection = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
+
 
             const day = {
-                date: `${date.getFullYear()}-${date.getMonth() + 1}-${dateCorrection}`,
+                date: `${date.getFullYear()}-${dateCorrection(date.getMonth() + 1)}-${dateCorrection(date.getDate())}`,
                 todo: [],
                 active: isActive,
             };
+
             newMonth.push(day);
         }
 
@@ -299,7 +307,7 @@ const Calendar: FC<CalendarProps> = ({downloadAsImage}) => {
         }
     };
 
-
+    console.log('month', month)
     return (
         <StyledCalendarContainer>
             <StyledSettings>
