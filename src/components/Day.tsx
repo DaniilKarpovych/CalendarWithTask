@@ -37,7 +37,13 @@ const StyledDateNumber = styled.p`
   margin: 5px;
   font-size: 18px;
 `
-
+const TodoAmount = styled.span`
+  font-size: 14px;
+  color: rgba(75, 66, 64, 0.54);
+`
+const StyledTodoRelativeContainer = styled.div`
+  position: relative;
+`
 
 interface DayProps {
     day: DayType,
@@ -89,8 +95,9 @@ const Day: FC<DayProps> = ({day, todo, holidays, labelArray, handleTodoTransfer,
             onDragLeave={handlerDragOver(false)}
             onClick={clickEditHandler}
         >
-            <StyledDateNumber>{new Date(date).getDate()}</StyledDateNumber>
-            <div style={{position: "relative"}}>
+            <StyledDateNumber>{new Date(date).getDate()}{' '}{todo && todo?.todoList?.length > 0 &&
+                <TodoAmount>{`${todo?.todoList?.length} card`}</TodoAmount>}</StyledDateNumber>
+            <StyledTodoRelativeContainer>
                 {holidays.map(item => <p>{item.name}</p>)}
                 <div>
                     {todo?.todoList.map((item, index) => (
@@ -110,11 +117,11 @@ const Day: FC<DayProps> = ({day, todo, holidays, labelArray, handleTodoTransfer,
                         placeholder='todo'/>}
                 </div>
 
-            </div>
+            </StyledTodoRelativeContainer>
             {edit && <Backdrop onClick={handlerBackdropClick}/>}
         </StyledDayContainer>) :
         (<StyledDayContainer border={false} opacity={0.5}>
-                <p>{new Date(date).getDate()}</p>
+                <StyledDateNumber>{new Date(date).getDate()}</StyledDateNumber>
             </StyledDayContainer>
         );
 };
